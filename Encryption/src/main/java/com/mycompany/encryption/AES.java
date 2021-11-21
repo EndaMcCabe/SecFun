@@ -19,6 +19,17 @@ import javax.crypto.NoSuchPaddingException;
 
 public class AES {
 
+    /*
+    When the encrypt button clicked
+        GUI creates instance of this AES class if the AES radio button is selected
+        passes plainText to the class then calls 2 methods based on input
+        generateKey()
+        encrypt()
+    
+    If the user pressed the decrypt button decrypt()method is called. 
+    */
+    
+    
     Cipher cipher;
     SecretKey secretKey;
     String encryptedText;
