@@ -4,27 +4,44 @@
  * and open the template in the editor.
  */
 package com.mycompany.encryption;
+
 import javax.crypto.*;
 import java.util.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
-    
-    
 /**
  *
  * @author Fujitsu
  */
 public class GUIApp extends javax.swing.JFrame {
-    
-    private SecretKey key;
+
+    private SecretKey secretKey;
     private final int KEY_SIZE = 128;
     private final int T_LEN = 128;
-    private Cipher encryptionCipher;
-    
-    public void init() throws Exception{
-        KeyGenerator generator = KeyGenerator.getInstance("AES");
-        generator.init(KEY_SIZE);
-        key = generator.generateKey();
+    static Cipher cipher;
+    String plainText;
+    String encryptedText;
+    String decryptedText;
+
+    AES a = new AES(plainText, secretKey, cipher);
+
+    public void init() throws Exception {
+        //KeyGenerator generator = KeyGenerator.getInstance("AES");
+        //generator.init(KEY_SIZE);
+        // key = generator.generateKey();
+
     }
+
     /**
      * Creates new form GUIApp
      */
@@ -41,6 +58,10 @@ public class GUIApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         AESTa = new javax.swing.JTextArea();
@@ -48,7 +69,10 @@ public class GUIApp extends javax.swing.JFrame {
         RSATa = new javax.swing.JTextArea();
         DecryptBtn = new javax.swing.JButton();
         EncryptBtn = new javax.swing.JButton();
-        InputField = new javax.swing.JTextField();
+        inputField = new javax.swing.JTextField();
+        toggleRSA = new javax.swing.JRadioButton();
+        toggleAES = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,17 +92,47 @@ public class GUIApp extends javax.swing.JFrame {
         });
 
         EncryptBtn.setText("Encrypt");
+        EncryptBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EncryptBtnActionPerformed(evt);
+            }
+        });
+
+        inputField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputFieldActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(toggleRSA);
+        toggleRSA.setText("RSA ");
+
+        buttonGroup1.add(toggleAES);
+        toggleAES.setText("AES");
+        toggleAES.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleAESActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Enter Message to Encrypt");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(17, 17, 17)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(85, 85, 85)
+                .addComponent(toggleRSA)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(toggleAES)
+                .addGap(93, 93, 93))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -88,15 +142,25 @@ public class GUIApp extends javax.swing.JFrame {
                             .addComponent(DecryptBtn)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(61, 61, 61)
-                        .addComponent(InputField, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(inputField, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(48, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(130, 130, 130))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(InputField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(inputField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(toggleRSA)
+                    .addComponent(toggleAES))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EncryptBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(DecryptBtn)
@@ -122,9 +186,58 @@ public class GUIApp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void DecryptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DecryptBtnActionPerformed
-        // TODO add your handling code here:
-        //byte[] messageInBytes
+        if (toggleAES.isSelected()) {
+            try {
+                decryptedText = a.decrypt(encryptedText, secretKey, cipher);
+                AESTa.setText("decryptedText:  \n" + encryptedText);
+            } catch (Exception e) {
+                System.out.println("Error decrypting ");
+            }
+
+        }
+
+
     }//GEN-LAST:event_DecryptBtnActionPerformed
+
+    private void toggleAESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleAESActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_toggleAESActionPerformed
+
+    private void EncryptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EncryptBtnActionPerformed
+
+        //Menu to check which algorithm the user wants to use
+        if (toggleAES.isSelected()) {
+            plainText = inputField.getText();
+            AESTa.setText("plainText:  \n" + plainText);
+
+            try {
+                a.generateKey();
+                secretKey = a.getSecretKey();
+                System.out.println("secret key from GUI" + secretKey);
+                a.encrypt(plainText, secretKey, cipher);
+                encryptedText = a.getEncryptedText();
+            } catch (NoSuchAlgorithmException e) {
+                System.out.println("exception trying to call generateKey() method");
+            }
+
+            try {
+
+                AESTa.setText("Encrypted text:  \n" + encryptedText);
+            } catch (Exception e) {
+                System.out.println("exception when calling encrypt() method");
+            }
+
+        } else if (toggleRSA.isSelected()) {
+            //Code here to begin RSA encryption
+        } else {
+            System.out.println("You must select an algorithm");
+        }
+
+    }//GEN-LAST:event_EncryptBtnActionPerformed
+
+    private void inputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -154,7 +267,7 @@ public class GUIApp extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater( new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new GUIApp().setVisible(true);
             }
@@ -165,10 +278,17 @@ public class GUIApp extends javax.swing.JFrame {
     private javax.swing.JTextArea AESTa;
     private javax.swing.JButton DecryptBtn;
     private javax.swing.JButton EncryptBtn;
-    private javax.swing.JTextField InputField;
     private javax.swing.JTextArea RSATa;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroup4;
+    private javax.swing.JTextField inputField;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JRadioButton toggleAES;
+    private javax.swing.JRadioButton toggleRSA;
     // End of variables declaration//GEN-END:variables
 }
