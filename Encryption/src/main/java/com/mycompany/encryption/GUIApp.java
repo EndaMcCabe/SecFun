@@ -218,6 +218,7 @@ public class GUIApp extends javax.swing.JFrame {
                 encryptedText = a.getEncryptedText();
             } catch (NoSuchAlgorithmException e) {
                 System.out.println("exception trying to call generateKey() method");
+                System.out.println(e.getMessage());
             }
 
             try {
